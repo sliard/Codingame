@@ -98,7 +98,7 @@ public class TestPlayer {
         initGrid(myGrid, grid1);
         System.out.println(myGrid);
 
-        myGrid.add(new Player.Couple(3,4),1,Player.Position.V_BA);
+        myGrid.add(new Player.Couple(3,4),1, Player.Rotation.V_BA);
 
         List<String> response = new ArrayList<>();
         grid1.add("......");
@@ -156,7 +156,7 @@ public class TestPlayer {
 
         Player.Grid myGrid2 = new Player.Grid();
         initGrid(myGrid2, grid1);
-        myGrid2.add(new Player.Couple(3,4),1,Player.Position.H_AB);
+        myGrid2.add(new Player.Couple(3,4),1, Player.Rotation.H_AB);
 
         List<String> response = new ArrayList<>();
         response.add("......");
@@ -212,7 +212,7 @@ public class TestPlayer {
 
         Player.Grid myGrid2 = new Player.Grid();
         initGrid(myGrid2, grid1);
-        myGrid2.add(new Player.Couple(3,4),1,Player.Position.H_BA);
+        myGrid2.add(new Player.Couple(3,4),1, Player.Rotation.H_BA);
 
         List<String> response = new ArrayList<>();
         response.add("......");
@@ -268,7 +268,8 @@ public class TestPlayer {
         initGrid(myGrid2, grid1);
         System.out.println(myGrid2);
 
-        myGrid2.fusion();
+        List<String> colorGroups = myGrid2.getColorGroups();
+        myGrid2.fusion(colorGroups);
 
         List<String> response = new ArrayList<>();
         response.add("......");
@@ -323,7 +324,8 @@ public class TestPlayer {
         initGrid(myGrid2, grid1);
         System.out.println(myGrid2);
 
-        myGrid2.fusion();
+        List<String> colorGroups = myGrid2.getColorGroups();
+        myGrid2.fusion(colorGroups);
 
         List<String> response = new ArrayList<>();
         response.add("...4..");
@@ -379,7 +381,8 @@ public class TestPlayer {
         initGrid(myGrid2, grid1);
         System.out.println(myGrid2);
 
-        myGrid2.fusion();
+        List<String> colorGroups = myGrid2.getColorGroups();
+        myGrid2.fusion(colorGroups);
 
         List<String> response = new ArrayList<>();
         response.add("...4..");
@@ -442,40 +445,6 @@ public class TestPlayer {
         Player.ComputePosition comput = new Player.ComputePosition(hand, myGrid2);
 
         System.out.println( comput.getOneCombo());
-
-    }
-
-
-    @Test
-    public void testAlgo2() {
-        List<String> grid1 = new ArrayList<>();
-        grid1.add("......");
-        grid1.add("......");
-        grid1.add("......");
-        grid1.add("......");
-        grid1.add("......");
-        grid1.add("......");
-        grid1.add("......");
-        grid1.add("......");
-        grid1.add("......");
-        grid1.add("......");
-        grid1.add("......");
-        grid1.add("..15..");
-
-        Player.Grid myGrid2 = new Player.Grid();
-        initGrid(myGrid2, grid1);
-
-        int val1 = myGrid2.add(new Player.Couple(2,2),0, Player.Position.H_AB);
-
-        int f1 = myGrid2.fusion();
-        myGrid2.downAll();
-
-        int val2 = myGrid2.add(new Player.Couple(6,5),1, Player.Position.H_AB);
-        int f2 = myGrid2.fusion();
-
-        System.out.println("val1="+val1+" - val2="+val2);
-        System.out.println("f1="+f1+" - f2="+f2);
-        System.out.println(myGrid2);
 
     }
 
