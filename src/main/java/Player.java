@@ -1,7 +1,5 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.IntStream;
 
 /**
  * Base game classe
@@ -30,7 +28,7 @@ class Player {
      * All possible rotation
      */
     public enum Rotation {
-        H_BA(2, -1, 0, NB_ROW - 1, NB_ROW - 1), V_AB(3, 0, 0, 0, NB_ROW - 1), H_AB(0, 0, 1, 0, NB_ROW - 2), V_BA(1, 0, 0, 0, NB_ROW - 1);
+        H_BA(2, -1, 0, 1, NB_ROW - 1), V_AB(3, 0, 0, 0, NB_ROW - 1), H_AB(0, 0, 1, 0, NB_ROW - 2), V_BA(1, 0, 0, 0, NB_ROW - 1);
 
         private final int pValue;
         private final int min;
@@ -377,9 +375,9 @@ class Player {
             for (int i = NB_LINE - 1; i > 0; i--) {
                 lineAfter = lines.get(i - 1);
                 line = lines.get(i);
-                for (int j = 0; j < NB_ROW - 1; j++) {
+                for (int j = 0; j < NB_ROW; j++) {
                     char e = line.charAt(j);
-                    char eAfter = line.charAt(j + 1);
+                    char eAfter = (j+1 < NB_ROW ? line.charAt(j + 1) : '.');
                     char eTop = lineAfter.charAt(j);
                     int pos = pointExist(j, i, colorGroup);
                     if (pos >= 0) {
@@ -395,7 +393,7 @@ class Player {
                     }
                     if (pos >= 0) {
                         colorGroup.set(pos, g);
-                    } else if (e != '.') {
+                    } else if (e != '.' && e != '0') {
                         colorGroup.add(g);
                     }
                 }
@@ -488,6 +486,20 @@ class Player {
             return getSimpleCombo();
         }
 
+        public int[] getSize(List<String> colorGroup) {
+            int result[] = {0,0,0,0,0,0};
+            int size;
+            for (String g : colorGroup) {
+                size = g.length() - g.replace(POINT_START, "").length();
+                if (size > 4) {
+                    result[result.length-1]++;
+                } else {
+                    result[size]++;
+                }
+            }
+            return result;
+        }
+
         public String getOneCombo() {
             Couple c1 = playerHand.get(0);
             Couple c2 = playerHand.get(1);
@@ -565,22 +577,49 @@ class Player {
             int bestScore = 0;
             int score = 0;
 
-            int nbFusion;
-            int nbFusion2;
+            int nbDeadHead;
+            int nbDeadHead2;
 
             List<String> colorGroup;
+            colorGroup = myGrid.getColorGroups();
+            int[] allSize;
+            int nbFusion;
+
+            allSize = getSize(colorGroup);
 
             for (Rotation p1 : Rotation.values()) {
                 for (int i = p1.getStart(); i <= p1.getEnd(); i++) {
                     Grid g2 = new Grid(myGrid);
                     if (g2.add(c1, i, p1)) {
+
                         colorGroup = g2.getColorGroups();
-                        nbFusion = g2.fusion(colorGroup);
-                        g2.downAll();
-                        colorGroup = g2.getColorGroups();
-                        nbFusion2 = g2.fusion(colorGroup);
-                        score = nbFusion + nbFusion2 * 5;
-                        Logger.info("nbFusion:" + nbFusion + " nbFusion2:" + nbFusion2);
+                        allSize = getSize(colorGroup);
+                        nbFusion = allSize[5]+allSize[4];
+
+                        Logger.info(g2.toString());
+                        score = allSize[2] + allSize[3]*2 + allSize[4] + allSize[5]*3;
+
+                        if(nbFusion > 0) {
+                            nbDeadHead = g2.fusion(colorGroup);
+                            g2.downAll();
+                            score += nbDeadHead*5;
+
+                            colorGroup = g2.getColorGroups();
+                            allSize = getSize(colorGroup);
+                            nbFusion = allSize[5];
+                            nbDeadHead2 = g2.fusion(colorGroup);
+
+                            score += nbDeadHead2*5;
+                            score += nbFusion*5;
+
+                            Logger.info("Fusion : "+p1+":"+i+" = "+score);
+                            Logger.info("size : size2="+allSize[2]+" - size3="+allSize[3]);
+
+                        } else {
+                            Logger.info(p1+":"+i+" = "+score);
+                            Logger.info("size : size2="+allSize[2]+" - size3="+allSize[3]);
+                        }
+
                         if (bestScore < score) {
                             bestRotation = p1;
                             bestRow = i;
@@ -662,11 +701,12 @@ class Player {
                 String row = in.next(); // One line of the map ('.' = empty, '0' = skull block, '1' to '5' = colored block)
             }
 
+
             // Write an action using System.out.println()
             // To debug: System.err.println("Debug messages...");
 
             ComputePosition solution = new ComputePosition(hand, myGrid);
-            System.out.println(solution.getLeftSolution()); // "x": the column in which to drop your blocks
+            System.out.println(solution.getSolution()); // "x": the column in which to drop your blocks
         }
     }
 }

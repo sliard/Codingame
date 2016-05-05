@@ -420,6 +420,82 @@ public class TestPlayer {
 
 
     @Test
+    public void testFusion4() {
+        List<String> grid1 = new ArrayList<>();
+        grid1.add("......");
+        grid1.add("......");
+        grid1.add("......");
+        grid1.add("......");
+        grid1.add("...05.");
+        grid1.add("..0003");
+        grid1.add("..0400");
+        grid1.add("..2450");
+        grid1.add("..5533");
+        grid1.add(".05341");
+        grid1.add("001345");
+        grid1.add("011345");
+
+        Player.Grid myGrid2 = new Player.Grid();
+        initGrid(myGrid2, grid1);
+        System.out.println(myGrid2);
+
+        List<String> colorGroups = myGrid2.getColorGroups();
+        myGrid2.fusion(colorGroups);
+
+        List<String> response = new ArrayList<>();
+        response.add("......");
+        response.add("......");
+        response.add("......");
+        response.add("......");
+        response.add("...05.");
+        response.add("..0003");
+        response.add("..0400");
+        response.add("..2450");
+        response.add("..5533");
+        response.add(".05341");
+        response.add("001345");
+        response.add("011345");
+
+        System.out.println(myGrid2);
+
+        for(int i=0; i<response.size(); i++) {
+            assertTrue(response.get(i).equals(myGrid2.lines.get(i)));
+        }
+
+    }
+
+    @Test
+    public void testColorGroup() {
+        List<String> grid1 = new ArrayList<>();
+        grid1.add("......");
+        grid1.add("......");
+        grid1.add("......");
+        grid1.add("......");
+        grid1.add("......");
+        grid1.add("......");
+        grid1.add("......");
+        grid1.add("......");
+        grid1.add("......");
+        grid1.add(".....2");
+        grid1.add("...345");
+        grid1.add("..1345");
+
+        Player.Grid myGrid2 = new Player.Grid();
+        initGrid(myGrid2, grid1);
+
+        Player.ComputePosition cp = new Player.ComputePosition(null,myGrid2);
+
+        List<String> colorGroup = myGrid2.getColorGroups();
+        int tabSize[] = cp.getSize(colorGroup);
+
+        assertTrue(tabSize[1] == 2);
+        assertTrue(tabSize[2] == 3);
+        assertTrue(tabSize[4] == 0);
+        assertTrue(tabSize[5] == 0);
+    }
+
+
+    @Test
     public void testAlgo() {
         List<String> grid1 = new ArrayList<>();
         grid1.add("...4..");
@@ -444,7 +520,7 @@ public class TestPlayer {
 
         Player.ComputePosition comput = new Player.ComputePosition(hand, myGrid2);
 
-        System.out.println( comput.getOneCombo());
+        System.out.println( comput.getSimpleCombo());
 
     }
 
