@@ -1,4 +1,4 @@
-*.class
+../target/test-classes/TestPlayer.class
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/

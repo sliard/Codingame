@@ -170,7 +170,7 @@ class Player {
          * @return row
          */
         public int getFirstHorizontalSlot() {
-            return lines.get(0).indexOf("..");
+            return lines.get(0).indexOf("SmashTheCode/src/main");
         }
 
         /**
@@ -198,10 +198,10 @@ class Player {
         public boolean canAdd(int row, Rotation r) {
             try {
                 if (r == Rotation.H_BA) {
-                    return lines.get(0).substring(row + Rotation.H_BA.getMin(), row + Rotation.H_BA.getMax() + 1).equals("..");
+                    return lines.get(0).substring(row + Rotation.H_BA.getMin(), row + Rotation.H_BA.getMax() + 1).equals("SmashTheCode/src/main");
                 }
                 if (r == Rotation.H_AB) {
-                    return lines.get(0).substring(row + Rotation.H_AB.getMin(), row + Rotation.H_AB.getMax() + 1).equals("..");
+                    return lines.get(0).substring(row + Rotation.H_AB.getMin(), row + Rotation.H_AB.getMax() + 1).equals("SmashTheCode/src/main");
                 }
                 return lines.get(1).substring(row, row + 1).equals(".");
 
