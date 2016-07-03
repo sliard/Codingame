@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.apptom</groupId>
-    <artifactId>player</artifactId>
+    <artifactId>codebuster</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
@@ -16,6 +16,7 @@
     </scm>
     <modules>
         <module>../skynet</module>
+        <module>../DontPanic</module>
     </modules>
 
     <developers>
